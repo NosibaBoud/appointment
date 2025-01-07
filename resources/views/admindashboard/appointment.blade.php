@@ -51,67 +51,53 @@
                                     </button>
                                 </div>
                             </nav>
-<h1>Appointment Details</h1>
-<body>
-<div class="containerr">
-    @foreach ($users as $user)
-    @foreach ($user->homeAppointments as $appointment)
-    <div class="appointment-info">
-        <div class="info-row">
-            <span class="label">Appointment ID:</span>
-            <span class="value">{{ $appointment->id }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">First Name:</span>
-            <span class="value">{{ $appointment->first_name }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Last Name:</span>
-            <span class="value">{{ $appointment->last_name }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Gender:</span>
-            <span class="value">{{ $appointment->gender }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Phonen Number:</span>
-            <span class="value">{{ $appointment->phone_number }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Email:</span>
-            <span class="value">{{ $appointment->email }}</span>
-        </div>
-       
-        <div class="info-row">
-            <span class="label">Date:</span>
-            <span class="value">{{ $appointment->date }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Time:</span>
-            <span class="value">{{ $appointment->time }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Address:</span>
-            <span class="value">{{ $appointment->address }}</span>
-        </div>
-        <div class="info-row">
-            <span class="label">Investigation(s):</span>
-            @foreach ($user->mytests as $mytests)
-            <br>
-            <span class="value">{{ $mytests->investigation->name }}</span>
-            @endforeach
-        </div>
-    </div>
-    <a href="/appointments" class="back-btn">Back to Appointments</a>
-</div>
-@endforeach
-    @endforeach
-</div>
-</header>
-</div>
-</div>
-</div>
-
-</div>
+                            <h1>Appointment Details</h1>
+                            <div class="appointment-info">
+                                <div class="info-row">
+                                    <span class="label">Appointment ID:</span>
+                                    <span class="value">{{ $appointment->id }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">First Name:</span>
+                                    <span class="value">{{ $appointment->first_name }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Last Name:</span>
+                                    <span class="value">{{ $appointment->last_name }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Gender:</span>
+                                    <span class="value">{{ $appointment->gender }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Phone Number:</span>
+                                    <span class="value">{{ $appointment->phone_number }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Email:</span>
+                                    <span class="value">{{ $appointment->email }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Date:</span>
+                                    <span class="value">{{ $appointment->date }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Time:</span>
+                                    <span class="value">{{ $appointment->time }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Address:</span>
+                                    <span class="value">{{ $appointment->address }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="label">Investigation(s):</span>
+                                    @foreach ($appointment->user->mytests as $test)
+                                        <br>
+                                        <span class="value">{{ $test->investigation->name }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                            
+                            <a href="{{ route('appointment.index') }}" class="back-btn">Back to Appointments</a>
 </body>
 

@@ -16,10 +16,17 @@ class AppointmentController extends Controller
         $users = User::with('homeAppointments', 'mytests.investigation')->get();
         return view('admindashboard.appointmentslist', compact('users'));
     }
-    public function viewappo()
+    public function viewappo($id)
     {
-        $users = User::with('homeAppointments', 'mytests.investigation')->get();
-        return view('admindashboard.appointment', compact('users'));
+        // Find the appointment by its ID
+        $appointment = HomeAppointment::find($id);
+    
+        if (!$appointment) {
+            // Handle the case where the appointment is not found
+            return redirect()->route('appointments.index')->withErrors('Appointment not found.');
+        }
+    
+        return view('admindashboard.appointment', compact('appointment'));
     }
     public function create(){
         return view('make appointment');

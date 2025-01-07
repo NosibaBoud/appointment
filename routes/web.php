@@ -56,8 +56,8 @@ Route::get('/test/{id}', function ($id) {
     $test = Investigation::find($id);
         return view('test',['test'=>$test]);
 }); 
-Route::get('/appointments', [AppointmentController::class, 'index']);
-Route::get('/appointment',  [AppointmentController::class, 'viewappo']);
+Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointment.index');
+Route::get('/appointment/{id}',  [AppointmentController::class, 'viewappo'])->name('appointment.view');;
 Route::post('/logout',[logoutcontroller::class,'destroy']);
 Route::get('/search',[ testcontroller::class,'search']);
 Route::get('/investigation/search',[ testcontroller::class,'searchfor']);
