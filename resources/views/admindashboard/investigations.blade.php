@@ -5,120 +5,75 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <title>Investigations</title>
 @extends('admindashboard.indexadmin')
+
 @section('content')
 <head>
- 
-      <link href="/css/adminpages.css" rel="stylesheet">
-    
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
     <link href="/css/adminpages.css" rel="stylesheet">
-  </head>
-    <div class="mx-auto max-w-8xl px-4 py-6 sm:px-6 lg:px-8 ">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Investigations</h1>
-    </div>    
-</br>
-<div class="search-bar">
-  <form  type="get" action="{{url('/investigation/search')}}">
-    <input  type="search" name="search" placeholder="Search for a medical test...">
-    <button type="submit">Search</button>
-  </form>
-</div>
-<form  method="POST" action="{{url('/investigation/create')}}">
-  @csrf
-    <button class="button add">create new investigation</button>
-</form>
-@if (session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-  <main>
-    <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-    <div class="container">
-    <div class="row align-items-center">
-      <div class="col">
-    </div>
-        <br>
-      
-        <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">id</th>
-                <th scope="col">name</th>
-                <th scope="col">actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                    @foreach($tests as $test)
-                    <th scope="row">{{$test->id}}</th>
-                <td>   
-                    <div class="col">
-                
-                      <strong>{{$test->name}}</strong>
-                    
-                </div>
-                   </td>
-                   <td>
-                    <div class="button-container">
-                    <a href="/investigation/{{$test->id}}/edit">
-                        <button  class="button edit">edit</button>
-</a>
+    <title>Investigations</title>
+</head>
 
-<!-- Confirmation Modal -->
-<div id="confirmationModal" class="modal">
-<div class="modal-content">
-<div class="modal-header">
-Confirm Deletion
-</div>
-<div class="modal-body">
-Are you sure you want to delete this item? This action cannot be undone.
-</div>
-<div class="modal-footer">
-<button class="btn btn-secondary" onclick="hideModal()">Cancel</button>
-                      <form action="{{ route('investigation.delete', $test) }}" method="POST" id="deleteForm">
+<div class="container mt-4">
+    <h1 class="text-3xl font-bold tracking-tight text-gray-900">Investigations</h1>
+    
+    <!-- Search Bar -->
+    <div class="search-bar my-3">
+        <form method="GET" action="{{ url('/investigation/search') }}">
+            <input type="text" name="search" placeholder="Search for a medical test..." class="form-control">
+            <button type="submit" class="btn btn-primary mt-2">Search</button>
+        </form>
+    </div>
+
+    <!-- Create New Investigation -->
+    <form method="POST" action="{{ url('/investigation/create') }}">
+        @csrf
+        <button class="btn btn-success mb-3">Create New Investigation</button>
+    </form>
+
+    <!-- Success Message -->
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <!-- Investigations Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($tests as $test)
+            <tr>
+                <td>{{ $test->id }}</td>
+                <td>{{ $test->name }}</td>
+                <td>
+                    <!-- Edit Button -->
+                    <a href="/investigation/{{ $test->id }}/edit" class="btn btn-warning">Edit</a>
+                    
+                    <!-- View Button -->
+                    <a href="/investigation/{{ $test->id }}" class="btn btn-info">View</a>
+                    
+                    <!-- Delete Button -->
+                    <form action="{{ route('investigation.delete', $test->id) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <button  class="button delete" >Delete</button>
+                        <button class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
                     </form>
-                  </div>
-                </div>
-            </div>
-            <script>
-            // Show the modal
-            function showModal() {
-                document.getElementById('confirmationModal').classList.add('active');
-            }
-          
-            // Hide the modal
-            function hideModal() {
-                document.getElementById('confirmationModal').classList.remove('active');
-            }
-          </script>
-                    <a href="/investigation/{{$test->id}}">
-                        <button class="button view">view</button>
-                      </a>
-                </div>
                 </td>
-              </tr>
-            </tbody>
-                  @endforeach
-          </table>
-      </div>
-      <br>
-     <div>
-        <br>
-      {{$tests->Links()}}
-      </div>
-  
-      </div>
-      <div>
-    </main>
-  </div>
-                   
-    
-</body>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="d-flex justify-content-center">
+        {{ $tests->links() }}
+    </div>
+</div>
 @endsection

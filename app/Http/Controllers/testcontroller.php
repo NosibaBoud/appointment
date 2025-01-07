@@ -81,7 +81,7 @@ public function update(Request $request,$id)
         $test = Investigation::find($id);
         if ($test) {
             $test->delete();
-            return redirect()->back()->with('success', 'PDF uploaded successfully!');
+            return redirect()->back()->with('success', 'Investigation  Delete it!');
         }
     }
     
