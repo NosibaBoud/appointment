@@ -50,12 +50,22 @@ public function update(Request $request,$id)
 
     }
     public function show($id)
-    {
-        $test = Investigation::find($id);
-        return view('admindashboard.investigation', compact('test'));;
+{
+    // Find the investigation by ID
+    $test = Investigation::find($id);
+
+    // Check if the test exists, if not redirect with an error
+    if (!$test) {
+        return redirect()->route('investigations.index')->with('error', 'Investigation not found.');
     }
+
+    // Pass the test to the view
+    return view('admindashboard.investigation', compact('test'));
+}
     
-    public function store(Request $request){
+    public function store(Request $request)
+    {
+        // Validate input fields
         $this->validate($request, [
             'name' => ['required', 'string', 'min:3', 'max:1000'],
             'details' => ['required', 'string', 'min:3', 'max:1000'],
@@ -64,6 +74,15 @@ public function update(Request $request,$id)
             'status' => ['required', 'string', 'min:3', 'max:1000'],
             'can_taken' => ['required', 'boolean'],
         ]);
+    
+        // Check if the investigation name already exists
+        $existingInvestigation = Investigation::where('name', $request->name)->first();
+    
+        if ($existingInvestigation) {
+            return redirect()->back()->with('error', 'An investigation with this name already exists.');
+        }
+    
+        // Create a new investigation if it doesn't exist
         $investigation = Investigation::create([
             'name' => $request->name,
             'details' => $request->details,
@@ -72,10 +91,10 @@ public function update(Request $request,$id)
             'instructions' => $request->instructions,
             'status' => $request->status,
             'can_taken' => $request->can_taken,
-            
         ]);
+    
+        // Redirect to the show page of the newly created investigation
         return redirect()->route('investigations.show', ['id' => $investigation->id]);
-
     }
     public function delete($id){
         $test = Investigation::find($id);
