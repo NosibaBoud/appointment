@@ -13,6 +13,7 @@ use App\Models\UserInvestigation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AdminAuthController;
 
 Route::get('/', function () {
     return view('home');
@@ -80,7 +81,16 @@ Route::group(['middleware' => ['auth']], function ()
                 Route::delete('/investigation/{id}/delete', [testcontroller::class, 'delete'])->name('investigation.delete');
                 Route::delete('/investigationn/{id}/remove', [Usertestscontroller::class, 'destroy'])->name('investigation.destroy');
                 Auth::routes();
- 
+                
+                Route::get('/admindashboard/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+                
+                Route::post('/admindashboard/login', [AdminAuthController::class, 'login']);
+                
+                Route::post('logout', [AdminAuthController::class, 'logout'])->name('logout');
+                
+                Route::middleware('auth:admin')->get('/admindashboard/admindashboard', function () {
+                    return view('admindashboard.dashboard'); // Your admin dashboard page
+                });
 //->middleware(['Auth','verified']);
 
 //route::get('/register',[RegisterController::class,'create']);

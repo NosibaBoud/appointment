@@ -22,18 +22,46 @@ public function edit($id)
     $investigation=Investigation::find($id);
     return view('admindashboard.editinvestigation',compact('investigation'));
 }
-public function update(Request $request,$id)
-{$investigation=Investigation::find($id);
+public function update(Request $request, $id)
+{
+    $investigation = Investigation::find($id);
+
+    if (!$investigation) {
+        return redirect()->route('investigations.index')->with('error', 'Investigation not found.');
+    }
+
+    $this->validate($request, [
+        'name' => ['required', 'string', 'min:3', 'max:1000'],
+        'instructions' => ['nullable', 'string', 'min:3', 'max:1000'],
+        'price' => ['required', 'numeric'],
+        'expected_time_for_test' => ['required', 'string', 'min:3', 'max:1000'],
+        'status' => ['required', 'string', 'min:3', 'max:1000'],
+        'can_taken' => ['required', 'boolean'],
+    ]);
+
+    $existingInvestigation = Investigation::where('name', $request->input('name'))
+        ->where('id', '!=', $id)
+        ->first();
+
+    if ($existingInvestigation) {
+        return redirect()->back()->with('error', 'An investigation with this name already exists.');
+    }
+
     $investigation->name = $request->input('name');
     $investigation->instructions = $request->input('instructions');
     $investigation->price = $request->input('price');
-    $investigation->details= $request->input('details');
+    $investigation->details = $request->input('details');
     $investigation->expected_time_for_test = $request->input('expected_time_for_test');
     $investigation->status = $request->input('status');
     $investigation->can_taken = $request->input('can_taken');
-    $investigation->update();
-    return redirect()->route('investigations.index')->with('success', 'Item updated successfully!');
+
+    // Save the updated investigation
+    $investigation->save();
+
+    // Redirect with success message
+    return redirect()->route('investigations.index')->with('success', 'Investigation updated successfully!');
 }
+
 
     public function search()
     {
